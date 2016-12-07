@@ -67,3 +67,5 @@ slackbot_settings.py
 *.tcl
 *.gif
 tcl/tk8.6/images/lamp.png
+Scripts/python35.dll
+Scripts/python.exe
