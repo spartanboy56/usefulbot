@@ -8,7 +8,7 @@ import re
 import random
 import pyowm
 
-sys.path.append(dirname("/home/jbird/dicemaniac/"))
+#sys.path.append(dirname("/home/jbird/dicemaniac/"))
 # to get the slackbot_settings.py file that contains the API token
 
 # some default info
