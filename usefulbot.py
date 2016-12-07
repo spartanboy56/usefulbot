@@ -21,32 +21,42 @@ owm = pyowm.OWM('6a47e3b888d6f1962270697e72ed9f99')
 def tx(message):
     return message._body.get('text')
 
+
+
 def getLocation(message):
     withweather = message._body.get('text')
-    noweather = withweather.strip('weather ')
-    citweather, conweather = noweather.split(' ', 1) 
-    citweather = citweather.strip(' ')
-    local = citweather + ',' + conweather
-    return local      
+    citweather, conweather = withweather.split('weather ', 1) 
+    citarray = conweather.split()
+    try:
+        citarray[1]
+    except IndexError:
+        return False
+    if(citarray[0] == "in"):
+        local = citarray[1] + "," + citarray[2]
+    else:
+        local = citarray[0] + "," + citarray[1]
+    return local
+    
+                       
 ###
-def getBotWeather(weather):
+def getBotWeather(weather, location):
     rawtemp = weather.get_temperature('fahrenheit')
     temp = rawtemp['temp']
     rawstatus = weather.get_detailed_status()
     status = rawstatus
     humidity = weather.get_humidity()
-    weatherstring = 'The weather is ' + status + ' with a temperature of ' + str(temp) + '°F' + ' and a humidity of ' + str(humidity) +'%'
+    weatherstring = 'The weather in ' + location + " is " + status + ' with a temperature of ' + str(temp) + '°F' + ' and a humidity of ' + str(humidity) +'%'
     return weatherstring
 
 
 #@listen_to('trigger word')
 #def functionName(message):
 #code triggered by word
-@listen_to('usefulbot  ' or 'usefulbot help')
+@listen_to('usefulbot help', re.IGNORECASE)
 def usefulHelp(message):
     message.reply('Commands: weather [city] [state/country]')
 
-@listen_to('usefulbot github')
+@listen_to('usefulbot github',re.IGNORECASE)
 def usefulGithub(message):
     message.reply('https://github.com/spartanboy56/usefulbot')    
 
@@ -57,10 +67,14 @@ def relevant(message):
 
 @listen_to('weather', re.IGNORECASE)
 def weather(message):
-       location = getLocation(message)
-       observation = owm.weather_at_place(location)
-       w = observation.get_weather()
-       message.reply(getBotWeather(w))
+    location = getLocation(message)
+    if(location == False):
+        message.reply("Please use the proper formatting. weather [city] [state/country]")
+    else:
+        observation = owm.weather_at_place(location)
+        w = observation.get_weather()
+        weatherphrase = getBotWeather(w,location)
+        message.reply(weatherphrase)
 
    
 
