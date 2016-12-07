@@ -25,7 +25,10 @@ def tx(message):
 
 def getLocation(message):
     withweather = message._body.get('text')
-    citweather, conweather = withweather.split('weather ', 1) 
+    try:
+        citweather, conweather = withweather.split('weather ', 1) 
+    except ValueError:
+        return False
     citarray = conweather.split()
     try:
         citarray[1]
