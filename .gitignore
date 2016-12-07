@@ -61,3 +61,9 @@ target/
 .DS_Store
 plot.png
 slackbot_settings.py
+*.h
+*.enc
+*.msg
+*.tcl
+*.gif
+tcl/tk8.6/images/lamp.png
