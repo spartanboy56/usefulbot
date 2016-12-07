@@ -60,3 +60,4 @@ target/
 
 .DS_Store
 plot.png
+slackbot_settings.py
