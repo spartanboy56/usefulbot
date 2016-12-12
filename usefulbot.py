@@ -1,10 +1,15 @@
 from slackbot.bot import respond_to
 from slackbot.bot import listen_to
 from slackbot.bot import Bot
+from bs4 import BeautifulSoup
+import requests
 import inspect
 import sys
 import re
 import pyowm
+import datetime
+import simplejson as json
+
 
 
 
@@ -79,7 +84,32 @@ def weather(message):
         weatherphrase = getBotWeather(w,location)
         message.reply(weatherphrase)
 
-   
+@respond_to('weekly releases', re.IGNORECASE)
+def weeklyReleases(message):
+    now = datetime.datetime.now()
+    year = now.year
+    year = str(year)
+    year = year.strip('20')
+    month = now.month
+    print(year,month)
+    page = requests.get('http://www.releases.com/l/games/'+ year + "/" + str(month))
+    soup = BeautifulSoup(page.content)
+    samples = soup.find_all("span", " day")
+    print(samples)
+
+#obtains the top news stories off of google news. Needs input sanitation.    
+@respond_to('news', re.IGNORECASE)
+def getNews(message):
+    prejsonformatnews = requests.get('https://newsapi.org/v1/articles?source=google-news&sortBy=top&apiKey=015df2efbcaa49a8b16d3cd0caaaaae3')
+    article = []
+
+    for i in prejsonformatnews.json()['articles']:
+        article = [i['title'],i['author'],i['description'],i['url']]
+        #sometimes one of the articles will contain 'None'. For now it just skips them and moves on to the next.'
+        try:
+            message.send('*' + article[0] + '*' + "\n" + 'Author: ' + article[1] + "\n" + 'Description: ' + article[2] + "\n" + article[3])
+        except TypeError:
+            print('NoneType')
 
 
 
