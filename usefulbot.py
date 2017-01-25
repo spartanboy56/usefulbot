@@ -83,7 +83,7 @@ def weather(message):
         w = observation.get_weather()
         weatherphrase = getBotWeather(w,location)
         message.reply(weatherphrase)
-
+#Work in progress. Getting weekly video game releases.
 @respond_to('weekly releases', re.IGNORECASE)
 def weeklyReleases(message):
     now = datetime.datetime.now()
